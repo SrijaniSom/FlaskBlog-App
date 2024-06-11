@@ -1,28 +1,29 @@
 # import requests
 from flaskblog.models import User, Post
 from flask import render_template,flash,redirect, session,url_for,request
-from flaskblog.form import RegistrationForm, LoginForm, AccountUpdateForm
+from flaskblog.form import RegistrationForm, LoginForm, AccountUpdateForm, PostForm
 from flaskblog import app, db, bcrypt
 from flask_login import login_user, current_user,logout_user,login_required
 import secrets
 import os
 from PIL import Image
 
-posts=[{
-    'author':'Richard Zone',
-    'title':'Blog Post 1',
-    'content_type':'This is the first blog to be uploaded!',
-    'date_posted':'19.05.2024'
-},{
-    'author':'Tommy Hillary',
-    'title':'Blog Post 2',
-    'content_type':'This is the second blog to be uploaded!',
-    'date_posted':'20.05.2024'
+# posts=[{
+#     'author':'Richard Zone',
+#     'title':'Blog Post 1',
+#     'content_type':'This is the first blog to be uploaded!',
+#     'date_posted':'19.05.2024'
+# },{
+#     'author':'Tommy Hillary',
+#     'title':'Blog Post 2',
+#     'content_type':'This is the second blog to be uploaded!',
+#     'date_posted':'20.05.2024'
 
-}]
+# }]
 
 @app.route("/")
 def hello():
+    posts=Post.query.all()
     return render_template('home.html',posts=posts)
 
 @app.route("/about")
@@ -108,3 +109,16 @@ def account():
     
     image_file=url_for('static',filename='profile_pics/'+ current_user.image_file)
     return render_template('account.html',title='Account',image_file=image_file,form=form)
+
+@app.route("/post/new", methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form=PostForm()
+    if form.validate_on_submit():
+        post=Post(title=form.title.data,content=form.content.data,author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your Post is Updated!','success')
+        return redirect(url_for('hello'))
+    
+    return render_template('create_post.html', title = 'Create New Post', form=form)
