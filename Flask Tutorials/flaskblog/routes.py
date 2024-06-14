@@ -174,14 +174,14 @@ def user_posts(username):
 
 def send_reset_email(user):
     token=user.get_reset_token()
-    print(token)
-    msg=Message('Password Reset Sent',recipients=[user.email],sender='noreply@demo.com')
+    print("token here",token)
+    msg=Message('Password Reset Sent',recipients=[user.email],sender='sujatasom79@gmail.com')
     msg.body=f'''To reset your password, visit the following link:
     {url_for('reset_password', token=token, _external=True)}
 
     If you did not make this request then simply ignore this email and no changes will be made.
-'''
-    mail.send(msg)
+    '''
+    print(msg)
 
 @app.route("/reset_password",methods=['GET','POST'])
 def request_reset():
@@ -206,11 +206,15 @@ def reset_password(token):
     if user is None:
         flash('Your token is invalid or expired!','warning')
         return redirect(url_for('request_reset'))
+    print("user here",user)
     form=ResetPasswordForm()
+    print(form)
     if form.validate_on_submit():
+        print("reset form is validated")
         hashed_password=bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user.password=hashed_password
+        print("new password",user.password)
         db.session.commit()
         flash('Your password has been updated!','success')
-        redirect(url_for('login'))
+        return redirect(url_for('login'))
     return render_template('reset_token.html',title='Request Password', form=form)
