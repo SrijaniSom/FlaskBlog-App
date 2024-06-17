@@ -37,6 +37,8 @@ A fully-featured blog application built with Flask, supporting user authenticati
 - **Modular Code Structure:**
   - Organized with Flask Blueprints for scalability and maintainability.
 
+I am attaching some of th3 screenshots below:
+
 ![Screenshot from 2024-06-14 06-31-02](https://github.com/SrijaniSom/FlaskBlog-App/assets/81528176/798e6b67-2e5b-465e-bd25-1797bfe13f75)
 
 ![Screenshot from 2024-06-14 06-32-36](https://github.com/SrijaniSom/FlaskBlog-App/assets/81528176/3e901728-fc87-4049-8747-ed15d1cf0cd0)
